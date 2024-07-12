@@ -1,0 +1,35 @@
+data "aws_ami" "server_ami" {
+ most_recent = true
+ owners = ["amazon"]
+ 
+ filter {
+  name = "owner-alias"
+  values = ["amazon"]
+ }
+ 
+ filter {
+  name = "name"
+  values = ["amzn2-ami-hvm*-x86_64-gp2"]
+ }
+}
+
+//Resource referencing from another file networking.tf
+resource "aws_instance" "assignment_ec2" {
+ count = var.instance_count
+ instance_type = var.instance_type
+ ami = data.aws_ami.server_ami.id
+ key_name = var.instance_key_name
+ tags = {
+  Name = "${var.cloud_env}_assignment_ec2_${count.index}"
+ }
+ iam_instance_profile = aws_iam_instance_profile.ec2_s3_profile.name
+ vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+ subnet_id = aws_subnet.assignment_public_test_subnet[0].id
+ root_block_device {
+  volume_size = var.vol_size
+ }
+}
+
+data "aws_instance" "assignment_ec2" {
+ instance_id = aws_instance.assignment_ec2[0].id
+}

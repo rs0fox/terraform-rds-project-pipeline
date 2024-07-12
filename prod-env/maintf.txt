@@ -1,0 +1,24 @@
+module "infra_services" {
+ source = "../modules/services/infra_services"
+ cloud_env = "prod-env"
+ vpc_tag_name = "vpc"
+ instance_count = "1"
+ instance_type = "t2.micro"
+ access_ip = 103.197.74.219/32
+ vpc_cidr = "10.7.0.0/16"
+ public_cidrs = ["10.7.1.0/24","10.7.3.0/24"]
+ private_cidrs = ["10.7.2.0/24","10.7.4.0/24"]
+ bucket_name = "tf-prod-bucket-testing"
+ instance_key_name = "hp"
+ region = "us-east-1"
+ db_instance_identifier = "assignment-database"
+ db_username = "user"
+ db_password = "password"
+ db_instance_class = "db.t3.micro"
+ storage_type = "gp2"
+ db_subnet_group_name = "assignment-subnet-group"
+ db_parameter_group_name = "assignment-parameter-group"
+ db_option_group_name = "assignment-option-group"
+ db_engine = "mysql"
+ db_engine_version = "8.0.35"
+}
